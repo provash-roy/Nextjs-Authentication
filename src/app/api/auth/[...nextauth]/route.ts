@@ -4,8 +4,8 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
 import clientPromise from "@/lib/mongodb";
 import bcrypt from "bcryptjs";
-import mongoose from "mongoose";
 import User from "@/models/User";
+import { connectToDatabase } from "@/lib/mongoose";
 
 export const authOptions: NextAuthOptions = {
   adapter: MongoDBAdapter(clientPromise),
@@ -23,17 +23,14 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        email: {},
-        password: {},
+        email: { label: "Email", type: "text" },
+        password: { label: "Password", type: "password" },
       },
 
       async authorize(credentials) {
-        await mongoose.connect(process.env.MONGODB_URI!);
+        await connectToDatabase();
 
-        const user = await User.findOne({
-          email: credentials?.email,
-        });
-
+        const user = await User.findOne({ email: credentials?.email });
         if (!user) return null;
 
         const isValid = await bcrypt.compare(
