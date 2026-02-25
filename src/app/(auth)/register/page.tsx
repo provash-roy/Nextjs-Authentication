@@ -26,9 +26,12 @@ function Register() {
         alert("Registration successful! Please login.");
         window.location.href = "/login"; // redirect to login page
       }
-    } catch (error: any) {
-      console.error(error.response?.data || error.message);
-      alert(error.response?.data?.message || "Registration failed");
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        alert(error.response?.data?.message || "Registration failed");
+      } else {
+        alert("Unexpected error occurred");
+      }
     }
   };
 
