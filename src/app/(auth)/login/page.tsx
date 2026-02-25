@@ -1,10 +1,10 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-
 import { signIn } from "next-auth/react";
 
 function Login() {
@@ -13,21 +13,17 @@ function Login() {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    try {
-      const res = await signIn("credentials", {
-        redirect: false,
-        email,
-        password,
-      });
 
-      if (res?.error) {
-        console.log("Login failed:", res.error);
-        alert("Invalid credentials!");
-      } else {
-        console.log("Login success!");
-      }
-    } catch (error) {
-      console.error("Login error:", error);
+    const res = await signIn("credentials", {
+      redirect: false,
+      email,
+      password,
+    });
+
+    if (res?.error) {
+      alert("Invalid credentials!");
+    } else {
+      window.location.href = "/profile"; // login success হলে redirect
     }
   };
 
@@ -44,24 +40,20 @@ function Login() {
             <Input
               type="email"
               id="email"
-              name="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full"
             />
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-2 mb-4">
             <Label htmlFor="password">Password</Label>
             <Input
               type="password"
               id="password"
-              name="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full"
             />
           </div>
 
@@ -69,6 +61,17 @@ function Login() {
             Login
           </Button>
         </form>
+
+        {/* 👇 Register Redirect Section */}
+        <p className="text-sm text-center mt-4">
+          Don’t have an account?{" "}
+          <Link
+            href="/register"
+            className="text-blue-600 hover:underline font-medium"
+          >
+            Register
+          </Link>
+        </p>
       </div>
     </div>
   );

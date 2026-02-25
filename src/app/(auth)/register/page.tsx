@@ -4,6 +4,7 @@ import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import Link from "next/link";
 
 function Register() {
   const [email, setEmail] = React.useState("");
@@ -75,6 +76,15 @@ function Register() {
             Register
           </Button>
         </form>
+        <p className="text-sm text-center mt-4">
+          Do you have an account?{" "}
+          <Link
+            href="/login"
+            className="text-blue-600 hover:underline font-medium"
+          >
+            Login
+          </Link>
+        </p>
       </div>
     </div>
   );
