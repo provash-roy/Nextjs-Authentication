@@ -1,19 +1,19 @@
-import mongoose from "mongoose";
+import mongoose, { Schema, models, model } from "mongoose";
 
-interface IUser {
-  username: string;
+export interface IUser {
+  name: string;
   email: string;
-  password: string;
+  password?: string;
+  role: "user" | "admin";
+  isVerified: boolean;
 }
 
-const userSchema = new mongoose.Schema<IUser>(
-  {
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-  },
-  { timestamps: true },
-);
+const UserSchema = new Schema<IUser>({
+  name: { type: String },
+  email: { type: String, required: true, unique: true },
+  password: { type: String },
+  role: { type: String, enum: ["user", "admin"], default: "user" },
+  isVerified: { type: Boolean, default: false },
+});
 
-const User = mongoose.models.User || mongoose.model<IUser>("User", userSchema);
-
-export default User;
+export default models.User || model<IUser>("User", UserSchema);
